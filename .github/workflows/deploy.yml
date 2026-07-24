@@ -17,17 +17,26 @@ jobs:
       - name: Checkout del repositorio
         uses: actions/checkout@v4
 
+      # 1. Forzamos a GitHub a usar Node 22 para que Astro funcione
+      - name: Instalar Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      # 2. Instalamos Bun para que sea tu gestor súper rápido
       - name: Instalar Bun
         uses: oven-sh/setup-bun@v2
         with:
           bun-version: latest
 
+      # 3. Instalamos dependencias y construimos (todo con Bun)
       - name: Instalar dependencias
         run: bun install
 
       - name: Construir el proyecto Astro
         run: bun run build
 
+      # 4. Preparamos la carpeta para subirla
       - name: Subir el artefacto para GitHub Pages
         uses: actions/upload-pages-artifact@v3
         with:
