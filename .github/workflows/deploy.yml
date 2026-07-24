@@ -1,13 +1,10 @@
 name: Deploy to GitHub Pages
 
 on:
-  # Se ejecuta cada vez que haces un push a la rama principal
   push:
     branches: [ main ]
-  # Permite ejecutar este flujo de trabajo manualmente desde la pestaña Actions
   workflow_dispatch:
 
-# Otorga los permisos necesarios a GitHub Actions
 permissions:
   contents: read
   pages: write
@@ -17,12 +14,24 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout your repository using git
+      - name: Checkout del repositorio
         uses: actions/checkout@v4
 
-      - name: Install, build, and upload your site
-        uses: withastro/action@v3
-        # withastro/action detecta automáticamente tu gestor de paquetes (npm, bun, etc.)
+      - name: Instalar Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Instalar dependencias
+        run: bun install
+
+      - name: Construir el proyecto Astro
+        run: bun run build
+
+      - name: Subir el artefacto para GitHub Pages
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./dist
 
   deploy:
     needs: build
@@ -31,6 +40,6 @@ jobs:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
-      - name: Deploy to GitHub Pages
+      - name: Desplegar a GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
