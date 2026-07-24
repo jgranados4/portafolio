@@ -1,11 +1,91 @@
 ---
-import Welcome from '../components/Welcome.astro';
-import Layout from '../layouts/Layout.astro';
+import Layout from "../layouts/Layout.astro";
+import Hero from "../components/Hero.astro";
+import TechStack from "../components/TechStack.astro";
+import ProjectCard from "../components/ProjectCard.astro";
 
-// Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
-// Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
+// Listas de habilidades parametrizadas extraídas de tu CV
+const frontendSkills = [
+  "Angular (Signals, Material)",
+  "React",
+  "HTML5",
+  "CSS3",
+  "JavaScript/TypeScript",
+];
+const backendSkills = ["C#", "ASP.NET Core", "Node.js", "PHP", "Laravel"];
+const databaseSkills = [
+  "SQL Server",
+  "PostgreSQL",
+  "Optimización de Consultas",
+];
+const toolsAndOthers = ["Docker", "Git", "Bun"];
 ---
 
-<Layout>
-	<Welcome />
+<Layout title="Juan Granados | Full Stack Developer">
+  <main>
+    <Hero />
+    <section
+      class="py-16 border-b border-slate-200 dark:border-slate-800 reveal-section opacity-0 translate-y-8 transition-all duration-700 ease-out"
+    >
+      <h2 class="text-3xl font-bold mb-10">Stack Tecnológico</h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-x-8">
+        <TechStack title="Frontend" skills={frontendSkills} />
+        <TechStack title="Backend" skills={backendSkills} />
+        <TechStack title="Bases de Datos" skills={databaseSkills} />
+        <TechStack title="Herramientas & DevOps" skills={toolsAndOthers} />
+      </div>
+    </section>
+
+    <section
+      id="proyectos"
+      class="py-16 reveal-section opacity-0 translate-y-8 transition-all duration-700 ease-out"
+    >
+      <h2 class="text-3xl font-bold mb-8">Proyectos Destacados</h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <ProjectCard
+          title="Sistema de Autenticación Moderno"
+          description="Arquitectura de autenticación avanzada implementando JWT, gestión de estado reactiva con Signals y la nueva API HttpResource. Optimizado con Bun para maximizar la velocidad."
+          tags={["Angular", "Signals", "Bun", "JWT"]}
+          link="https://github.com/jgranados4/Proyecto_AngularAutenticacionJWT_SignalStore_HttpResource"
+        />
+        <ProjectCard
+          title="API REST con Clean Architecture"
+          description="Backend robusto diseñado bajo principios SOLID y Clean Architecture en .NET. Incluye sistema de seguridad con JWT + Refresh Tokens y gestión eficiente de sesiones de usuario."
+          tags={["ASP.NET Core", "C#", "Clean Architecture", "SQL Server"]}
+          link="https://github.com/jgranados4/CRUDAPI"
+        />
+        <ProjectCard
+          title="APX UI - Librería de Componentes"
+          description="Desarrollo de una librería de componentes UI dinámicos para Angular, diseñada para acelerar la creación de tablas y formularios empresariales complejos integrados con Angular Material."
+          tags={["Angular", "Angular Material", "UI/UX"]}
+          link="https://github.com/jgranados4/apx-workspace"
+        />
+      </div>
+    </section>
+  </main>
 </Layout>
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            // Cuando la sección entra en pantalla, quitamos la opacidad 0 y el desplazamiento
+            entry.target.classList.remove("opacity-0", "translate-y-8");
+            entry.target.classList.add("opacity-100", "translate-y-0");
+          } else {
+            entry.target.classList.remove("opacity-100", "translate-y-0");
+            entry.target.classList.add("opacity-0", "translate-y-8");
+          }
+        });
+      },
+      { threshold: 0.1 }, // Se activa cuando el 10% de la sección es visible
+    );
+
+    // Seleccionamos todas las secciones con la clase 'reveal-section'
+    const revealSections = document.querySelectorAll(".reveal-section");
+    revealSections.forEach((section) => {
+      observer.observe(section);
+    });
+  });
+</script>
